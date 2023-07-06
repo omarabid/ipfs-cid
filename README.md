@@ -6,7 +6,7 @@ Identifiers) from a slice of bytes.
 [What is a CID?](https://docs.ipfs.tech/concepts/content-addressing/#what-is-a-cid)
 
 [![CI](https://github.com/omarabid/ipfs-cid/actions/workflows/ci.yml/badge.svg)](https://github.com/omarabid/ipfs-cid/actions/workflows/ci.yml)
-[![Crates.io](https://img.shields.io/crates/v/)](https://crates.io/crates/)
+[![Crates.io](https://img.shields.io/crates/v/ipfs-cid.svg)](https://crates.io/crates/ipfs-cid)
 
 ## Usage
 
