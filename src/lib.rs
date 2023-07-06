@@ -1,14 +1,11 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
+mod error;
+
+use crate::error::Result;
+
+pub fn generate_from_file(file: std::fs::File) -> Result<String> {
+    Ok(String::from("tbd"))
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+pub fn generate_from_bytes(bytes: &[u8]) -> Result<String> {
+    Ok(String::from("tbd"))
 }
