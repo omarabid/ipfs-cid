@@ -3,7 +3,7 @@ name = "ipfs-cid"
 description = """
 Generate IPFS CIDs (Content Identifiers) from a slice of bytes.
 """
-keywords = ["ipfs", "cid", "content", "identifier", "hash", "multihash"]
+keywords = ["ipfs", "cid", "content", "identifier", "hash"]
 authors = ["Abid Omar <contact@omarabid.com>"]
 version = "1.0.0"
 edition = "2021"
