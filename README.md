@@ -28,7 +28,7 @@ This should return
 QmUBnCzebDwZgkXp9ZkHHKQNfaeWn2Dw8p8vNz4GN4jBLa
 ```
 
-The file is accessible from IPFS at the same hash: (QmUBnCzebDwZgkXp9ZkHHKQNfaeWn2Dw8p8vNz4GN4jBLa)[https://ipfs.io/ipfs/QmUBnCzebDwZgkXp9ZkHHKQNfaeWn2Dw8p8vNz4GN4jBLa]
+The file is accessible from IPFS at the same hash: [QmUBnCzebDwZgkXp9ZkHHKQNfaeWn2Dw8p8vNz4GN4jBLa](https://ipfs.io/ipfs/QmUBnCzebDwZgkXp9ZkHHKQNfaeWn2Dw8p8vNz4GN4jBLa)
 
 ### License
 
