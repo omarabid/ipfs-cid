@@ -1,5 +1,5 @@
-use ipfs_cid::generate_cid;
-use ipfs_cid::generate_cid_hash;
+use ipfs_cid::{generate_cid, generate_cid_hash};
+
 fn main() {
     let bytes_slice = b"hello world";
 

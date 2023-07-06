@@ -1,12 +1,22 @@
 [package]
 name = "ipfs-cid"
-version = "0.1.0"
+description = """
+Generate IPFS CIDs (Content Identifiers) from a slice of bytes.
+"""
+keywords = ["ipfs", "cid", "content", "identifier", "hash", "multihash"]
+authors = ["Abid Omar <contact@omarabid.com>"]
+version = "1.0.0"
 edition = "2021"
+license = "MIT"
+homepage = "https://github.com/omarabid/ipfs-cid"
+repository = "https://github.com/omarabid/ipfs-cid"
+readme = "README.md"
+rust-version = "1.70.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-cid = { version = "0.5.0", default-features = false }
+cid = { version = "0.5.1", default-features = false }
 thiserror = "1.0.41"
 ipfs-unixfs = "0.2.0"
 bs58 = "0.5.0"
