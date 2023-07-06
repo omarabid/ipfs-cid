@@ -14,6 +14,9 @@ pub enum IpfscidError {
         #[source]
         source: Box<dyn std::error::Error + Send + Sync + 'static>,
     },
+
+    #[error("No last chunk")]
+    NoLastChunk,
 }
 
 impl IpfscidError {
