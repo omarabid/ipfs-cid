@@ -17,6 +17,9 @@ pub enum IpfscidError {
 
     #[error("No last chunk")]
     NoLastChunk,
+
+    #[error("Invalid UTF-8")]
+    InvalidUtf8(#[from] std::string::FromUtf8Error),
 }
 
 impl IpfscidError {

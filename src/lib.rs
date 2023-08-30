@@ -29,8 +29,8 @@ pub fn generate_cid(bytes: &[u8]) -> Result<Cid> {
     Ok(last_chunk.0)
 }
 
-/// Generate a CID Hash from a byte slice
-pub fn generate_cid_hash(bytes: &[u8]) -> Result<String> {
+/// Generate a CID V0 from a byte slice
+pub fn generate_cid_v0(bytes: &[u8]) -> Result<String> {
     let cid = generate_cid(bytes)?;
 
     Ok(cid.to_string())
