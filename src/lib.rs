@@ -31,10 +31,7 @@ pub fn generate_cid(bytes: &[u8]) -> Result<Cid> {
 
     let h2 = Code::Sha2_256.digest(&last_chunk.1);
 
-    let cid = Cid::new_v0(h2).unwrap();
-
-    let data = cid.to_bytes();
-    let out = Cid::try_from(data).unwrap();
+    let cid = Cid::new_v0(h2)?;
 
     Ok(cid)
 }
@@ -57,44 +54,53 @@ pub fn generate_cid_v1(bytes: &[u8]) -> Result<String> {
 }
 
 pub fn convert_cid_v0_to_uint256(cid_0: String) -> Result<String> {
-    let cid = Cid::try_from(cid_0).unwrap();
+    let cid = Cid::try_from(cid_0)?;
 
     let digest = cid.hash().digest();
 
     let uint256 = num_bigint::BigUint::from_bytes_le(digest);
 
-    dbg!(uint256);
-
-    Ok(String::from("to be implemented"))
+    Ok(uint256.to_string())
 }
 
 pub fn convert_cid_v1_to_uint256(cid_1: String) -> Result<String> {
-    let cid = Cid::try_from(cid_1).unwrap();
+    let cid = Cid::try_from(cid_1)?;
 
     let digest = cid.hash().digest();
 
     let uint256 = num_bigint::BigUint::from_bytes_le(digest);
 
-    dbg!(uint256);
-    Ok(String::from("to be implemented"))
+    Ok(uint256.to_string())
 }
 
 pub fn convert_uint256_to_cid_v0(uint256: String) -> Result<String> {
-    let bigint = num_bigint::BigUint::parse_bytes(uint256.as_bytes(), 10);
+    let bigint = num_bigint::BigUint::parse_bytes(uint256.as_bytes(), 10)
+        .ok_or_else(|| IpfscidError::new("Invalid uint256"));
 
     // convert bigint to bytes
-    let mut bytes = bigint.unwrap().to_bytes_le();
+    let mut bytes = bigint?.to_bytes_le();
 
-    // the bytes are the digest already. We just need to convert it to a CID
-    // but we need to add the multicodec
     bytes.insert(0, 0x12);
     bytes.insert(1, 0x20);
-    let multihash = cid::multihash::Multihash::from_bytes(&bytes).unwrap();
-    let cid = cid::Cid::new_v0(multihash).unwrap();
-    dbg!(cid);
+
+    let multihash = cid::multihash::Multihash::from_bytes(&bytes)?;
+    let cid = cid::Cid::new_v0(multihash)?;
+
     Ok(cid.to_string())
 }
 
 pub fn convert_uint256_to_cid_v1(uint256: String) -> Result<String> {
-    Ok(String::from("to be implemented"))
+    let bigint = num_bigint::BigUint::parse_bytes(uint256.as_bytes(), 10)
+        .ok_or_else(|| IpfscidError::new("Invalid uint256"));
+
+    // convert bigint to bytes
+    let mut bytes = bigint?.to_bytes_le();
+
+    bytes.insert(0, 0x12);
+    bytes.insert(1, 0x20);
+
+    let multihash = cid::multihash::Multihash::from_bytes(&bytes)?;
+    let cid = cid::Cid::new_v1(64, multihash);
+
+    Ok(cid.to_string())
 }

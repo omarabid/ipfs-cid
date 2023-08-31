@@ -20,6 +20,12 @@ pub enum IpfscidError {
 
     #[error("Invalid UTF-8")]
     InvalidUtf8(#[from] std::string::FromUtf8Error),
+
+    #[error("Invalid CID")]
+    InvalidCid(#[from] cid::Error),
+
+    #[error("Invalid multihash")]
+    InvalidMultihash(#[from] cid::multihash::Error),
 }
 
 impl IpfscidError {
