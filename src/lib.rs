@@ -1,14 +1,17 @@
 mod error;
 
 use crate::error::{IpfscidError, Result};
+use cid::multihash::Code;
+use cid::multihash::MultihashDigest;
 use cid::Cid;
 
-/// Generate a CID from a byte slice
 pub fn generate_cid(bytes: &[u8]) -> Result<Cid> {
+    let h = Code::Sha2_256.digest(bytes);
+
     // create a UnixFS file
     let mut unixfs_file = ipfs_unixfs::file::adder::FileAdder::default();
 
-    // Get the chunch size
+    // Get the chunck size
     let chunk_size = unixfs_file.size_hint();
 
     // Split the provided bytes into chunks
@@ -26,12 +29,45 @@ pub fn generate_cid(bytes: &[u8]) -> Result<Cid> {
     let last_chunk =
         unixfs_iterator.last().ok_or(IpfscidError::NoLastChunk)?;
 
-    Ok(last_chunk.0)
+    let h2 = Code::Sha2_256.digest(&last_chunk.1);
+
+    let cid = Cid::new_v0(h2).unwrap();
+
+    let data = cid.to_bytes();
+    let out = Cid::try_from(data).unwrap();
+
+    Ok(cid)
 }
 
 /// Generate a CID V0 from a byte slice
 pub fn generate_cid_v0(bytes: &[u8]) -> Result<String> {
-    let cid = generate_cid(bytes)?;
+    let cida = generate_cid(bytes)?;
 
-    Ok(cid.to_string())
+    Ok(cida.to_string())
+}
+
+/// Generate a CID V1 from a byte slice
+pub fn generate_cid_v1(bytes: &[u8]) -> Result<String> {
+    let cida = generate_cid(bytes)?;
+
+    // convert cidv0 to cidv1
+    let cida1 = Cid::new_v1(cida.codec(), *cida.hash());
+
+    Ok(cida1.to_string())
+}
+
+pub fn convert_cid_v0_to_uint256(cid_0: String) -> Result<String> {
+    Ok(String::from("to be implemented"))
+}
+
+pub fn convert_cid_v1_to_uint256(cid_1: String) -> Result<String> {
+    Ok(String::from("to be implemented"))
+}
+
+pub fn convert_uint256_to_cid_v0(uint256: String) -> Result<String> {
+    Ok(String::from("to be implemented"))
+}
+
+pub fn convert_uint256_to_cid_v1(uint256: String) -> Result<String> {
+    Ok(String::from("to be implemented"))
 }
