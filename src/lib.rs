@@ -100,7 +100,7 @@ pub fn convert_uint256_to_cid_v1(uint256: String) -> Result<String> {
     bytes.insert(1, 0x20);
 
     let multihash = cid::multihash::Multihash::from_bytes(&bytes)?;
-    let cid = cid::Cid::new_v1(64, multihash);
+    let cid = cid::Cid::new_v1(0x70, multihash);
 
     Ok(cid.to_string())
 }
