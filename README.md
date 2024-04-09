@@ -30,6 +30,14 @@ QmUBnCzebDwZgkXp9ZkHHKQNfaeWn2Dw8p8vNz4GN4jBLa
 
 The file is accessible from IPFS at the same hash: [QmUBnCzebDwZgkXp9ZkHHKQNfaeWn2Dw8p8vNz4GN4jBLa](https://ipfs.io/ipfs/QmUBnCzebDwZgkXp9ZkHHKQNfaeWn2Dw8p8vNz4GN4jBLa)
 
+## CLI
+
+A basic CLI is avaiable in 2.0.0. It returns v0 CID of the passed file.
+
+**Usage**
+
+$ ipfs-cid _file_
+
 ### License
 
 This project is licensed under
