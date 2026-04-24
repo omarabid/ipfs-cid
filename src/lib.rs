@@ -1,12 +1,12 @@
 mod error;
 
 use crate::error::{IpfscidError, Result};
-use cid::multihash::Code;
-use cid::multihash::MultihashDigest;
 use cid::Cid;
+use multihash_codetable::Code::Sha2_256;
+use multihash_codetable::MultihashDigest;
 
 pub fn generate_cid(bytes: &[u8]) -> Result<Cid> {
-    let h = Code::Sha2_256.digest(bytes);
+    let h = Sha2_256.digest(bytes);
 
     // create a UnixFS file
     let mut unixfs_file = ipfs_unixfs::file::adder::FileAdder::default();
@@ -29,7 +29,7 @@ pub fn generate_cid(bytes: &[u8]) -> Result<Cid> {
     let last_chunk =
         unixfs_iterator.last().ok_or(IpfscidError::NoLastChunk)?;
 
-    let h2 = Code::Sha2_256.digest(&last_chunk.1);
+    let h2 = Sha2_256.digest(&last_chunk.1);
 
     let cid = Cid::new_v0(h2)?;
 
