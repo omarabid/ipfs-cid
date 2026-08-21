@@ -1,13 +1,11 @@
 mod error;
 
 use crate::error::{IpfscidError, Result};
-use cid::multihash::Code;
-use cid::multihash::MultihashDigest;
 use cid::Cid;
+use multihash_codetable::Code::Sha2_256;
+use multihash_codetable::MultihashDigest;
 
 pub fn generate_cid(bytes: &[u8]) -> Result<Cid> {
-    let h = Code::Sha2_256.digest(bytes);
-
     // create a UnixFS file
     let mut unixfs_file = ipfs_unixfs::file::adder::FileAdder::default();
 
@@ -29,7 +27,7 @@ pub fn generate_cid(bytes: &[u8]) -> Result<Cid> {
     let last_chunk =
         unixfs_iterator.last().ok_or(IpfscidError::NoLastChunk)?;
 
-    let h2 = Code::Sha2_256.digest(&last_chunk.1);
+    let h2 = Sha2_256.digest(&last_chunk.1);
 
     let cid = Cid::new_v0(h2)?;
 
@@ -74,14 +72,7 @@ pub fn convert_cid_v1_to_uint256(cid_1: String) -> Result<String> {
 }
 
 pub fn convert_uint256_to_cid_v0(uint256: String) -> Result<String> {
-    let bigint = num_bigint::BigUint::parse_bytes(uint256.as_bytes(), 10)
-        .ok_or_else(|| IpfscidError::new("Invalid uint256"));
-
-    // convert bigint to bytes
-    let mut bytes = bigint?.to_bytes_le();
-
-    bytes.insert(0, 0x12);
-    bytes.insert(1, 0x20);
+    let bytes = uint256_to_sha256_multihash_bytes(uint256)?;
 
     let multihash = cid::multihash::Multihash::from_bytes(&bytes)?;
     let cid = cid::Cid::new_v0(multihash)?;
@@ -90,17 +81,29 @@ pub fn convert_uint256_to_cid_v0(uint256: String) -> Result<String> {
 }
 
 pub fn convert_uint256_to_cid_v1(uint256: String) -> Result<String> {
-    let bigint = num_bigint::BigUint::parse_bytes(uint256.as_bytes(), 10)
-        .ok_or_else(|| IpfscidError::new("Invalid uint256"));
-
-    // convert bigint to bytes
-    let mut bytes = bigint?.to_bytes_le();
-
-    bytes.insert(0, 0x12);
-    bytes.insert(1, 0x20);
+    let bytes = uint256_to_sha256_multihash_bytes(uint256)?;
 
     let multihash = cid::multihash::Multihash::from_bytes(&bytes)?;
     let cid = cid::Cid::new_v1(0x70, multihash);
 
     Ok(cid.to_string())
+}
+
+fn uint256_to_sha256_multihash_bytes(uint256: String) -> Result<Vec<u8>> {
+    let bigint = num_bigint::BigUint::parse_bytes(uint256.as_bytes(), 10)
+        .ok_or_else(|| IpfscidError::new("Invalid uint256"));
+
+    // BigUint drops leading zero bytes. Restore the fixed 32-byte SHA-256
+    // digest before constructing the multihash, or malformed short digests
+    // can reach crypto code and panic.
+    let mut digest = bigint?.to_bytes_le();
+    if digest.len() > 32 {
+        return Err(IpfscidError::new("Invalid uint256"));
+    }
+    digest.resize(32, 0);
+
+    let mut bytes = Vec::with_capacity(34);
+    bytes.extend_from_slice(&[0x12, 0x20]);
+    bytes.extend_from_slice(&digest);
+    Ok(bytes)
 }
